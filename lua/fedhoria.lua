@@ -57,7 +57,7 @@ hook.Add("OnEntityCreated", "Fedhoria", function(ent)
 			end)
 		end
 	end
-	if (!enabled:GetBool() or !ent:IsRagdoll()) then return end
+	if (!enabled:GetBool() or !players:GetBool() or !ent:IsRagdoll()) then return end
 	timer.Simple(0, function()
 		if !IsValid(ent) then return end
 		if CORPSE then
@@ -95,6 +95,19 @@ hook.Add("RM_RagdollReady", "Fedhoria", function(ragdoll)
 	if IsValid(ragdoll) then
 		fedhoria.StartModule(ragdoll, "stumble_legs")
 	end
+end)
+
+
+
+hook.Add("PostPlayerDeath", "Fedhoria", function(ply)
+	if (!enabled:GetBool()) then return end
+	timer.Simple(0, function()
+		if !IsValid(ply) then return end
+		local ragdoll = ply:GetRagdollEntity()
+		if (IsValid(ragdoll) and ragdoll:IsRagdoll()) then
+			fedhoria.StartModule(ragdoll, "stumble_legs")
+		end
+	end)
 end)
 
 

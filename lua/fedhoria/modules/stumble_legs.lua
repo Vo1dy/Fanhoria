@@ -30,7 +30,7 @@ local math_Clamp = math.Clamp
 local math_max = math.max
 local math_min = math.min
 
-local constant = 10000
+local constant = 1000
 
 local function CreateSpring(phys1, phys2)
 	if (!IsValid(phys1) or !IsValid(phys2)) then return NULL end
@@ -156,8 +156,8 @@ function MODULE:Init(phys_bone, lpos)
 				local const = ents.Create("phys_spring")
 				const:SetPos(phys_lhand:LocalToWorld(hand_offset))
 				const:SetKeyValue("springaxis", str_axis)
-				const:SetKeyValue("constant", 1350)
-				const:SetKeyValue("damping", 60)
+				const:SetKeyValue("constant", 1000)
+				const:SetKeyValue("damping", 75)
 				const:SetKeyValue("relativedamping", 30)
 				const:SetPhysConstraintObjects(phys_lhand, phys)
 				const:Spawn()
@@ -173,8 +173,8 @@ function MODULE:Init(phys_bone, lpos)
 				local const = ents.Create("phys_spring")
 				const:SetPos(phys_rhand:LocalToWorld(hand_offset))
 				const:SetKeyValue("springaxis", str_axis)
-				const:SetKeyValue("constant", 1350)
-				const:SetKeyValue("damping", 60)
+				const:SetKeyValue("constant", 1000)
+				const:SetKeyValue("damping", 75)
 				const:SetKeyValue("relativedamping", 30)
 				const:SetPhysConstraintObjects(phys_rhand, phys)
 				const:Spawn()
@@ -297,16 +297,27 @@ function MODULE:PhysicsSimulate(phys, dt)
 
 	local st = stumble_time:GetFloat()
 
-	if (st <= 0) then
+	if (st <= 0) and ragmod and ragmod:IsRagmodRagdoll(target) == false then
 		self:Remove()		
 		return false
 	end
 
 	local f = 1 - (CurTime() - self.Created) / st
 
-	if (f <= 0) then
+	if (f <= 0) and ragmod and ragmod:IsRagmodRagdoll(target) == false then
 		self:Remove()
 		return false
+	end
+
+	--RagMod Reworked support
+	if ragmod and ragmod:IsRagmodRagdoll(target) then
+		local owner = target:GetOwningPlayer()
+		if !owner:Alive() then
+		self:Remove()
+		return false
+		else
+		f = 1
+		end
 	end
 
 	--helps reduce excessive twitching

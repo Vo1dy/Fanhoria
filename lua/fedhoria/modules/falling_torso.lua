@@ -73,13 +73,25 @@ local die_time = CreateConVar("fedhoria_dietime", 10, bit.bor(FCVAR_ARCHIVE, FCV
 function MODULE:PhysicsSimulate(phys, dt)
 	local f = self.StartDie and 1 - (CurTime() - self.StartDie) / die_time:GetFloat() or 1
 
+	local target = self:GetTarget()
+
 	--if we have been still for too long we are dead x_x
-	if (f < 0) then
+	if (f < 0) and ragmod and ragmod:IsRagmodRagdoll(target) == false then
 		self:Remove()
 		return false
 	end
 
-	local target = self:GetTarget()
+	--RagMod Reworked support
+	if ragmod and ragmod:IsRagmodRagdoll(target) then
+		local owner = target:GetOwningPlayer()
+		if !owner:Alive() then
+		self:Remove()
+		return false
+		else
+		f = 1
+		end
+	end
+
 
 	local phys_bone = phys:GetID()
 
@@ -104,7 +116,7 @@ function MODULE:PhysicsSimulate(phys, dt)
 
 			self.last_pos = pos
 
-			if (offset:LengthSqr() < 900) then 
+			if (offset:LengthSqr() < 900) and ragmod and ragmod:IsRagmodRagdoll(target) == false then
 				self.StartDie = self.StartDie or CurTime()				
 				return false
 			else

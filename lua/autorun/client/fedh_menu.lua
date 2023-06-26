@@ -3,10 +3,10 @@ local function PopulateSBXToolMenu(pnl)
     pnl:ControlHelp("Enable or disable Fanhoria.")
 
     pnl:CheckBox("Lethal Headshots", "fedhoria_lethalheadshots")
-    pnl:ControlHelp("Enable or disable lethal headshots. This will make NPCs immediately die if shot in the head.      This only works with models that use the valve biped skeleton, if using custom models keep this off.      It's recommended to keep this on otherwise.")
+    pnl:ControlHelp("Enable or disable lethal headshots. This will make NPCs immediately die if shot in the head.      This is poorly implemented, has poor compatability etc. and is awaiting a rework. Leave it disabled.")
 
     pnl:NumSlider("Stumble time", "fedhoria_stumble_time", 0, 10, 3)
-    pnl:ControlHelp("This effects how long the ragdoll will stumble around for in seconds.      Stumbling looks very bad and janky so it's recommended to keep this at 0 until updated to look better.")
+    pnl:ControlHelp("This effects how long the ragdoll will stumble around for in seconds.      Stumbling is mostly used for ragmod, which stumble time doesn't effect in Fanhoria. It looks very bad otherwise and should be kept at 0.")
 
     pnl:NumSlider("Die time", "fedhoria_dietime", 0, 10, 3)
     pnl:ControlHelp("This controls how long before the ragdoll dies after drowning/being still for too long in seconds.     It's recommended to keep this at 10.")
